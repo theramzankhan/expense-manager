@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ramzankhan.expense_manager.dto.ExpenseDTO;
+import com.ramzankhan.expense_manager.entity.ActivityLog;
 import com.ramzankhan.expense_manager.entity.Expense;
 import com.ramzankhan.expense_manager.repository.ExpenseRepository;
 
@@ -19,13 +20,19 @@ public class ExpenseServiceImpl implements ExpenseService {
 	
 	@Autowired
 	private ExpenseRepository expenseRepository;
+	
+	@Autowired
+	private ActivityLogService activityLogService;
 
 	@Override
 	public Expense createExpense(ExpenseDTO dto) {
 		// TODO Auto-generated method stub
 		Expense expense = new Expense();
 		BeanUtils.copyProperties(dto, expense);
-		return expenseRepository.save(expense);
+		Expense saved = expenseRepository.save(expense);
+		
+		activityLogService.log("ADDED", "Added expense: " + saved.getTitle() + ", ₹" + saved.getAmount());
+		return saved;
 	}
 
 	@Override
@@ -44,7 +51,11 @@ public class ExpenseServiceImpl implements ExpenseService {
 	@Override
 	public void deleteExpense(Long id) {
 		// TODO Auto-generated method stub
-		expenseRepository.deleteById(id);
+		expenseRepository.findById(id).ifPresent(expense -> {
+			expenseRepository.deleteById(id);
+			activityLogService.log("DELETED", "Deleted expense: " + expense.getTitle() + ", ₹" + expense.getAmount());
+		});
+		
 	}
 
 	@Override
@@ -53,7 +64,10 @@ public class ExpenseServiceImpl implements ExpenseService {
 		Optional<Expense> exisitingExpense = expenseRepository.findById(id);
 		if(exisitingExpense.isPresent()) {
 			updatedExpense.setId(id);
-			return expenseRepository.save(updatedExpense);
+			Expense saved = expenseRepository.save(updatedExpense);
+			
+			activityLogService.log("UPDATED", "Updated expense: " + saved.getTitle() + ", ₹" + saved.getAmount());
+			return saved;
 		} else {
 			return null;
 		}
