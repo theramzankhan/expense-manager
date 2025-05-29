@@ -20,7 +20,7 @@ public class ActivityLogController {
 	
 	@GetMapping
 	public ResponseEntity<List<ActivityLog>> getAllLogs() {
-		activityLogService.getAllLogs();
-		return ResponseEntity.ok().build();
+		List<ActivityLog> logs = activityLogService.getAllLogs();
+		return ResponseEntity.ok(logs);
 	}
 }
