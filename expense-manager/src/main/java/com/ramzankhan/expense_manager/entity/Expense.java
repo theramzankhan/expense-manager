@@ -28,7 +28,7 @@ public class Expense {
     private String currency;
     private String location;
 
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt;	
     private LocalDateTime updatedAt;
 
     @PrePersist

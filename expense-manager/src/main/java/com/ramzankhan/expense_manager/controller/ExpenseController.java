@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -43,5 +45,10 @@ public class ExpenseController {
 	public ResponseEntity<Void> deleteExpense(@PathVariable Long id) {
 		expenseService.deleteExpense(id);
 		return ResponseEntity.noContent().build();
+	}
+	
+	@PutMapping("/api/expenses/{id}")
+	public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody Expense updatedExpense) {
+		return new ResponseEntity<>(expenseService.updateExpense(id, updatedExpense), HttpStatus.OK);
 	}
 }

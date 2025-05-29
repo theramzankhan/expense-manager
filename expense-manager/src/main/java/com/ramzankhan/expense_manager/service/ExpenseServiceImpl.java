@@ -1,6 +1,7 @@
 package com.ramzankhan.expense_manager.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,18 @@ public class ExpenseServiceImpl implements ExpenseService {
 	public void deleteExpense(Long id) {
 		// TODO Auto-generated method stub
 		expenseRepository.deleteById(id);
+	}
+
+	@Override
+	public Expense updateExpense(Long id, Expense updatedExpense) {
+		// TODO Auto-generated method stub
+		Optional<Expense> exisitingExpense = expenseRepository.findById(id);
+		if(exisitingExpense.isPresent()) {
+			updatedExpense.setId(id);
+			return expenseRepository.save(updatedExpense);
+		} else {
+			return null;
+		}
 	}
 	
 }
