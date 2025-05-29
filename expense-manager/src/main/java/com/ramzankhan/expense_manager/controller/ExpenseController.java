@@ -47,7 +47,7 @@ public class ExpenseController {
 		return ResponseEntity.noContent().build();
 	}
 	
-	@PutMapping("/api/expenses/{id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody Expense updatedExpense) {
 		return new ResponseEntity<>(expenseService.updateExpense(id, updatedExpense), HttpStatus.OK);
 	}
