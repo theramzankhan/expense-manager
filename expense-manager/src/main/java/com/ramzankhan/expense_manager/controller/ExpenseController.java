@@ -1,5 +1,6 @@
 package com.ramzankhan.expense_manager.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ramzankhan.expense_manager.dto.ExpenseDTO;
 import com.ramzankhan.expense_manager.entity.Expense;
+import com.ramzankhan.expense_manager.service.ExpenseExportService;
 import com.ramzankhan.expense_manager.service.ExpenseService;
+
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 @RequestMapping("/api/expenses")
@@ -25,6 +30,9 @@ public class ExpenseController {
 	
 	@Autowired
 	private ExpenseService expenseService;
+	
+	@Autowired
+	private ExpenseExportService expenseExportService;
 
 	@PostMapping
 	public ResponseEntity<Expense> createExpense(@RequestBody ExpenseDTO dto) {
@@ -50,5 +58,11 @@ public class ExpenseController {
 	@PutMapping("/{id}")
 	public ResponseEntity<Expense> updateExpense(@PathVariable Long id, @RequestBody Expense updatedExpense) {
 		return new ResponseEntity<>(expenseService.updateExpense(id, updatedExpense), HttpStatus.OK);
+	}
+	
+	@GetMapping("/export/csv")
+	public ResponseEntity<Void> exportExpensesToCSV(HttpServletResponse response) throws IOException {
+		expenseExportService.exportExpensesToCSV(response);
+		return ResponseEntity.ok().build(); 
 	}
 }
