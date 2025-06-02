@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Expense Manager</string>
+    <string name="add_expense">Add expense</string>
+    <string name="export_expenses">Export Expenses (CSV)</string>
+</resources>
